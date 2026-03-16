@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JUNCTION MAGAZINE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --black: #000000;
+      --white: #ffffff;
+      --gray-light: #f2f2f2;
+      --gray-mid: #e0e0e0;
+      --gray-text: #888888;
+      --font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    html {
+      font-size: 16px;
+    }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--black);
+      padding: 0 48px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 15px;
+      font-weight: 200;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--black);
+      white-space: nowrap;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .btn-refresh {
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-refresh:hover {
+      opacity: 0.7;
+    }
+
+    .btn-refresh:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    /* ─── FILTER BAR ─── */
+    .filter-bar {
+      padding: 28px 48px 0;
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--gray-mid);
+    }
+
+    .filter-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray-text);
+      padding: 0 0 14px;
+      margin-right: 36px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .filter-btn:hover {
+      color: var(--black);
+    }
+
+    .filter-btn.active {
+      color: var(--black);
+      border-bottom-color: var(--black);
+    }
+
+    /* ─── MAIN ─── */
+    main {
+      padding: 60px 48px 100px;
+    }
+
+    /* ─── STATUS ─── */
+    .status {
+      text-align: center;
+      padding: 80px 0;
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray-text);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--gray-mid);
+      border-top-color: var(--black);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ─── GRID ─── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--gray-mid);
+      border: 1px solid var(--gray-mid);
+    }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--white);
+      text-decoration: none;
+      color: var(--black);
+      display: flex;
+      flex-direction: column;
+      outline: 1px solid transparent;
+      outline-offset: -1px;
+      transition: outline-color 0.15s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      outline-color: var(--black);
+      z-index: 1;
+      position: relative;
+    }
+
+    .card-thumb {
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+      background: var(--gray-light);
+      flex-shrink: 0;
+    }
+
+    .card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .card:hover .card-thumb img {
+      transform: scale(1.03);
+    }
+
+    .card-thumb-placeholder {
+      width: 100%;
+      height: 100%;
+      background: var(--gray-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-thumb-placeholder svg {
+      opacity: 0.15;
+    }
+
+    .card-body {
+      padding: 20px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 10px;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-source {
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--black);
+      color: var(--white);
+      padding: 3px 7px;
+      line-height: 1;
+    }
+
+    .card-date {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      color: var(--gray-text);
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.55;
+      letter-spacing: 0.01em;
+      flex: 1;
+    }
+
+    .card-desc {
+      font-size: 11px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--gray-text);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* ─── ERROR BANNER ─── */
+    .error-banner {
+      background: var(--gray-light);
+      border-left: 2px solid var(--black);
+      padding: 14px 18px;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      margin-bottom: 40px;
+    }
+
+    /* ─── AI TAGS ─── */
+    .card-category {
+      font-size: 9px;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray-text);
+      border: 1px solid var(--gray-mid);
+      padding: 2px 6px;
+      white-space: nowrap;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .tag-brand {
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid var(--black);
+      padding: 2px 6px;
+    }
+
+    .tag-keyword {
+      font-size: 9px;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--gray-text);
+      border: 1px solid var(--gray-mid);
+      padding: 2px 6px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--gray-mid);
+      padding: 32px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-size: 11px;
+      font-weight: 200;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
+
+    .footer-note {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      color: var(--gray-text);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1200px) {
+      .grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 900px) {
+      header {
+        padding: 0 24px;
+      }
+      .filter-bar {
+        padding: 20px 24px 0;
+        overflow-x: auto;
+        white-space: nowrap;
+        scrollbar-width: none;
+      }
+      .filter-bar::-webkit-scrollbar { display: none; }
+      main {
+        padding: 40px 24px 80px;
+      }
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      footer {
+        padding: 24px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      header {
+        padding: 0 16px;
+        height: 56px;
+      }
+      .logo {
+        font-size: 13px;
+      }
+      .btn-refresh {
+        font-size: 10px;
+        padding: 8px 14px;
+      }
+      .filter-bar {
+        padding: 16px 16px 0;
+      }
+      main {
+        padding: 32px 16px 64px;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      footer {
+        padding: 20px 16px;
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a class="logo" href="#">Junction Magazine</a>
+    <div class="header-right">
+      <button class="btn-refresh" id="btnRefresh">Refresh</button>
+    </div>
+  </header>
+
+  <!-- FILTER BAR -->
+  <nav class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="hypebeast">Hypebeast</button>
+    <button class="filter-btn" data-filter="wwd">WWD Japan</button>
+  </nav>
+
+  <!-- MAIN -->
+  <main id="main">
+    <div class="status" id="status">
+      <div class="spinner"></div><br>Loading articles...
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Junction Magazine</div>
+    <div class="footer-note">Curated from HYPEBEAST JP &amp; WWD JAPAN</div>
+  </footer>
+
+  <script>
+    const API_BASE = 'http://localhost:8000';
+
+    const SOURCE_MAP = {
+      'hypebeast': 'HYPEBEAST JP',
+      'wwd': 'WWD JAPAN',
+    };
+
+    let allArticles = [];
+    let currentFilter = 'all';
+
+    /* ─── FETCH FROM API ─── */
+    async function loadAll() {
+      setLoading(true);
+      clearErrors();
+      try {
+        const res = await fetch(`${API_BASE}/api/articles`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        allArticles = data.articles || [];
+        render();
+      } catch (e) {
+        showErrors([`APIサーバーに接続できません: ${e.message}`]);
+        render();
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    async function refreshAll() {
+      setLoading(true);
+      clearErrors();
+      try {
+        const res = await fetch(`${API_BASE}/api/refresh`, { method: 'POST' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        allArticles = data.articles || [];
+        render();
+      } catch (e) {
+        showErrors([`更新に失敗しました: ${e.message}`]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    /* ─── RENDER ─── */
+    function render() {
+      const main = document.getElementById('main');
+      const sourceName = SOURCE_MAP[currentFilter];
+      const filtered = currentFilter === 'all'
+        ? allArticles
+        : allArticles.filter(a => a.source === sourceName);
+
+      if (filtered.length === 0) {
+        main.innerHTML = '<div class="status">No articles found.</div>';
+        return;
+      }
+
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      filtered.forEach(article => {
+        grid.appendChild(createCard(article));
+      });
+
+      main.innerHTML = '';
+      if (window._errorBanner) {
+        main.appendChild(window._errorBanner);
+      }
+      main.appendChild(grid);
+    }
+
+    function createCard(article) {
+      const a = document.createElement('a');
+      a.className = 'card';
+      a.href = article.link;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+
+      const thumbHtml = article.thumbnail
+        ? `<img src="${escHtml(article.thumbnail)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${thumbPlaceholder()}'" />`
+        : thumbPlaceholder();
+
+      const dateStr = formatDate(article.published);
+      const desc = (article.ai_summary || '').trim();
+      const brands = (article.brands || []).slice(0, 3)
+        .map(b => `<span class="tag-brand">${escHtml(b)}</span>`).join('');
+      const keywords = (article.trend_keywords || [])
+        .map(k => `<span class="tag-keyword">${escHtml(k)}</span>`).join('');
+
+      a.innerHTML = `
+        <div class="card-thumb">${thumbHtml}</div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-source">${escHtml(article.source)}</span>
+            <span class="card-category">${escHtml(article.category || '')}</span>
+            <span class="card-date">${dateStr}</span>
+          </div>
+          <div class="card-title">${escHtml(article.title)}</div>
+          ${desc ? `<div class="card-desc">${escHtml(desc)}</div>` : ''}
+          ${brands ? `<div class="card-tags">${brands}</div>` : ''}
+          ${keywords ? `<div class="card-tags">${keywords}</div>` : ''}
+        </div>
+      `;
+      return a;
+    }
+
+    function thumbPlaceholder() {
+      return `<div class="card-thumb-placeholder">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/>
+          <path d="M21 15l-5-5L5 21"/>
+        </svg>
+      </div>`;
+    }
+
+    function escHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function formatDate(str) {
+      if (!str) return '';
+      try {
+        const d = new Date(str);
+        if (isNaN(d)) return '';
+        return d.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      } catch { return ''; }
+    }
+
+    /* ─── UI HELPERS ─── */
+    function setLoading(on) {
+      const main = document.getElementById('main');
+      const btn = document.getElementById('btnRefresh');
+      if (on) {
+        main.innerHTML = '<div class="status"><div class="spinner"></div><br>AIが記事を分析中...</div>';
+        btn.disabled = true;
+      } else {
+        btn.disabled = false;
+      }
+    }
+
+    function clearErrors() {
+      window._errorBanner = null;
+    }
+
+    function showErrors(errors) {
+      const div = document.createElement('div');
+      div.className = 'error-banner';
+      div.textContent = errors.join(' / ');
+      window._errorBanner = div;
+    }
+
+    /* ─── FILTER ─── */
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        render();
+      });
+    });
+
+    /* ─── REFRESH ─── */
+    document.getElementById('btnRefresh').addEventListener('click', refreshAll);
+
+    /* ─── INIT ─── */
+    loadAll();
+  </script>
+</body>
+</html>
